@@ -7,13 +7,13 @@ In this project, we design a Federated learning (FL) framework FL-DPCR. The fram
 The project integrates our designed [**Opacus-DPCR**](https://github.com/imcjp/Opacus-DPCR) to implement FL with DPCR. For more details, please see our [**Github Project**](https://github.com/imcjp/Opacus-DPCR).
 
 The software environment of the source code requires **Python3**, and parts of the required packages are as follows:
-numpy
-scipy
-opacus==1.1.2
-torch==1.11.0+cu113
-torchaudio==0.11.0+cu113
-torchvision==0.12.0+cu113
-tensorboard==2.10.1
+* numpy
+* scipy
+* opacus==1.1.2
+* torch==1.11.0+cu113
+* torchaudio==0.11.0+cu113
+* torchvision==0.12.0+cu113
+* tensorboard==2.10.1
 
 #### Instructions:
 
@@ -24,3 +24,4 @@ pip install dpcrpy
 pip install opacus_dpcr
 
 If you have any questions or suggestions for improvement, please contact email jpingcai@163.com. Thank you!
+

@@ -9,7 +9,7 @@ The project integrates our designed [**Opacus-DPCR**](https://github.com/imcjp/O
 The software environment of the source code requires **Python3**, and parts of the required packages are as follows:
 * numpy
 * scipy
-* opacus==1.1.2
+* **opacus==1.1.2**
 * torch==1.11.0+cu113
 * torchaudio==0.11.0+cu113
 * torchvision==0.12.0+cu113

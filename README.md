@@ -20,8 +20,8 @@ The software environment of the source code requires **Python3**, and parts of t
 1. In folder "fldpcr", we implemented FL-DPCR, including server for the collaborator (server.py) and client for the participants (priClient.py for private FL and flClient.py for non-private FL), as well as some auxiliary codes in folder "utils".
 2. We provide a script "main.m" to help users quickly implement FL-DPCR using our code. In this script, we provide multiple DPCR models, including SimpleMech, TwoLevel, BinMech, FDA as well as our proposed BCRG and ABCRG.
 3. The folder "dpcrpy" and "opacus_dpcr" are for implementing DPCR and private learning with DPCR. They are from [**Opacus-DPCR**](https://github.com/imcjp/Opacus-DPCR). Also, you can install our achievements with "pip" command as follows:
-+ pip install dpcrpy
-+ pip install opacus_dpcr
++ pip install **dpcrpy**
++ pip install **opacus_dpcr**
 
 If you have any questions or suggestions for improvement, please contact email jpingcai@163.com. Thank you!
 

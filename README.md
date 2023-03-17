@@ -1,6 +1,6 @@
 # Code for "A Federated Learning Framework Based on Differential Privacy Continuous Data Release"
 
-The project is the code for the paper **"A Federated Learning Framework Based on Differential Privacy Continuous Data Release"**. The authors are Jianping Cai, Ximeng Liu*, Qingqing Ye, Member, Yang Liu, Yuyang Wang.
+The project is the code for the paper **"A Federated Learning Framework Based on Differential Privacy Continuous Data Release"**. The authors are Jianping Cai, Ximeng Liu*, Qingqing Ye, Yang Liu, Yuyang Wang.
 
 In this project, we design a Federated learning (FL) framework FL-DPCR. The framework introduces differential privacy continuous data release (DPCR) to construct parameter models, which significantly reduces the accumulation of noise on parameter models, thus improves the learning accuracy.
 

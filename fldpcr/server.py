@@ -290,7 +290,7 @@ class Server(object):
 
         mixing_coefficients = [self.clients[idx].getDatasetSize() / self.total_data_size for idx in
                                sampled_client_indices]
-        self.aggregateAfterAccumulation(sampled_client_indices, mixing_coefficients)
+        
         # average each updated model parameters of the selected clients and update the global model
         self.aggregateAfterAccumulation(sampled_client_indices, mixing_coefficients)
 

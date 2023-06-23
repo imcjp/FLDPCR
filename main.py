@@ -65,7 +65,7 @@ if __name__ == '__main__':
             'K': 20,    #Number of participants
             'R': 20000, #Maximum communication rounds. It may be less than actual communication rounds due to exhaustion of privacy budget.
             'E': 100,   #Internal iteration number
-            'sample_rate': 0.1, #Sampling rate of each iteration
+            'sample_rate': 0.01, #Sampling rate of each iteration
         },
         'optim_config': {
             'lr': 0.1  #Learning rate

@@ -23,7 +23,7 @@ The software environment of the source code requires **Python3**, and parts of t
 + pip install **dpcrpy**
 + pip install **opacus_dpcr**
 4. We conduct our experiments on three datasets: **MNIST**, **FashionMNIST**(**FMNIST**) and **CIFAR10**. Additionally, we integrated two deep learning models **CNN** and **WideResNet**. You can use them with the following three commands:
-+ For **MNIST**: <span style="color:blue">python main.py "{'data_config':{'dataset_name':'MNIST'}, 'model_config':{'name':'CNN_MNIST'}, 'dp_config':{'epsilon':1, 'delta':0.000333}}"</span><span style="color: green"> Some green text </span>
++ For **MNIST**: python main.py "{'data_config':{'dataset_name':'MNIST'}, 'model_config':{'name':'CNN_MNIST'}, 'dp_config':{'epsilon':1, 'delta':0.000333}}"
 + For **FashionMNIST**: python main.py "{'data_config':{'dataset_name':'FashionMNIST'}, 'model_config':{'name':'CNN_MNIST'}, 'dp_config':{'epsilon':2, 'delta':0.000333}}"
 + For **CIFAR10**: python main.py "{'data_config':{'dataset_name':'CIFAR10'}, 'model_config':{'name':'WideResnet10_2'}, 'dp_config':{'epsilon':8, 'delta':0.0004}}"
 

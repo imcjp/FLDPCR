@@ -16,6 +16,9 @@
 # This script is used to perform experiments for FL-DPCR
 ##########################################################################
 from fldpcr.server import Server
+import tools.utils as utils
+import sys
+import json
 
 def runFLDPCR(configs):
     ## Configuration Information
@@ -27,6 +30,10 @@ def runFLDPCR(configs):
     model_config = configs["model_config"]
     dp_config = configs["dp_config"]
     dpcr_model = configs["dpcr_model"]
+    ## set seed
+    if global_config['seed'] > 0:
+        utils.torch_seed(global_config['seed'])
+        utils.normal_seed(global_config['seed'])
 
     message = "\n[WELCOME] Unfolding configurations...!"
     print(message);
@@ -53,11 +60,12 @@ if __name__ == '__main__':
             # Otherwise, the federated learning is without privacy.
             'usingDP': True,
             'device': 'cuda',   #GPU or CPU
-            'is_mp': False  # If True, training can be done in parallel using multiple threads
+            'is_mp': False,  # If True, training can be done in parallel using multiple threads
+            'seed': 0   # When seed > 0, set the random seed
         },
         'data_config': { # dataset infomation.
             'data_path': 'data',
-            'dataset_name': 'MNIST',
+            'dataset_name': 'MNIST', # MNIST, FashionMNIST or CIFAR10
             'num_shards': 200,
         },
         'fed_config': {
@@ -76,12 +84,8 @@ if __name__ == '__main__':
             'gpu_ids': [0]
         },
         'model_config': {
-            'name': 'CNN',  #The available models see the file models/__init__.py
-            'args': {   #Arguments needed to construct the parameter model
-                'in_channels': 1,
-                'hidden_channels': 8,
-                'num_hiddens': 32,
-                'num_classes': 10
+            'name': 'CNN_MNIST',  #The available models see the file models/__init__.py, e.g. CNN_MNIST, WideResnet10_2
+            'args': {   #Arguments needed to construct the parameter model (optional)
             }
         },
         'dp_config': {
@@ -96,10 +100,19 @@ if __name__ == '__main__':
             'sigma': 1    #Only works for isFixedClientT = False
         },
         'dpcr_model': {
-            'name': 'ABCRG',  #Available DPCR models: DPFedAvg (without DPCR), SimpleMech, TwoLevel, BinMech, FDA, BCRG, ABCRG
+            'name': 'SimpleMech',  #Available DPCR models: DPFedAvg (without DPCR), SimpleMech, TwoLevel, BinMech, FDA, BCRG, ABCRG
             'args':{
                 'kOrder': 12    #Only works for TwoLevel, BinMech, FDA, BCRG and ABCRG; Ignored for DPFedAvg and SimpleMech
             }
         }
     }
+    # Override experiment parameters via command line (optional)
+    if sys.argv and len(sys.argv)>=2:
+        inputConfig = sys.argv[1];
+        print(inputConfig)
+        try:
+            inputConfig = json.loads(inputConfig);
+        except:
+            inputConfig = json.loads(json.dumps(eval(inputConfig)))
+        utils.dictConv(config,inputConfig)
     runFLDPCR(config)

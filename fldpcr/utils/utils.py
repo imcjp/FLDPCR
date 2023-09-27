@@ -94,7 +94,6 @@ class CustomTensorDataset(Dataset):
 
 def create_datasets(data_path, dataset_name, num_clients, num_shards, iid,datasetDist=None):
     """Split the whole dataset in IID or non-IID manner for distributing to clients."""
-    dataset_name = dataset_name.upper()
     # get dataset from torchvision.datasets if exists
     if hasattr(torchvision.datasets, dataset_name):
         # set transformation differently per dataset
@@ -107,7 +106,7 @@ def create_datasets(data_path, dataset_name, num_clients, num_shards, iid,datase
                     torchvision.transforms.Normalize(CIFAR10_MEAN, CIFAR10_STD_DEV)
                 ]
             )
-        elif dataset_name in ["MNIST"]:
+        elif dataset_name in ["MNIST","FashionMNIST"]:
             transform = torchvision.transforms.ToTensor()
         
         # prepare raw training & test datasets

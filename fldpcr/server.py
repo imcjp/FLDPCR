@@ -23,11 +23,12 @@ import torch
 from multiprocessing import pool, cpu_count
 from torch.utils.data import DataLoader
 from collections import OrderedDict
-from fldpcr.utils.utils import init_net,create_datasets
+from fldpcr.utils.utils import init_net, create_datasets
 from fldpcr.priClient import PriClient
 from fldpcr.flClient import FLClient
 from opacus.validators import ModuleValidator
 import models
+
 
 def printOnRunning(info=None):
     if isinstance(info, dict):
@@ -36,6 +37,7 @@ def printOnRunning(info=None):
         print(f'[{stage}]\t{strInfo}')
     else:
         print(info)
+
 
 def afterEachIteration(info):
     round = info['round']
@@ -52,8 +54,8 @@ def afterEachIteration(info):
         message += f"\t=> EpsilonUsed for client {str(i + 1).zfill(4)}: {epsUseds[i]:.4f}";
     message += "\n"
     print(message);
-        
-        
+
+
 class Server(object):
 
     def __init__(self, model_config={}, global_config={}, data_config={}, init_config={}, fed_config={},
@@ -241,17 +243,42 @@ class Server(object):
         del message;
         gc.collect()
 
+    def federatedAggregation(self, sampled_client_indices, coefficients):
+        message = f"[Round: {str(self._round).zfill(4)}] Aggregate updated weights of All clients...!"
+        printOnRunning(message);
+        del message;
+        gc.collect()
+        averaged_weights = OrderedDict()
+
+        leftCof = 1;
+        for it, idx in enumerate(sampled_client_indices):
+            local_weights = self.clients[idx].getModel().state_dict()
+            leftCof -= coefficients[it]
+            for key in self.model.state_dict().keys():
+                client_weight = coefficients[it] * local_weights['_module.' + key]
+                if it == 0:
+                    averaged_weights[key] = client_weight
+                else:
+                    averaged_weights[key] += client_weight
+        # Unselected clients do not update the global model. We use leftCof to aggregate them uniformly to improve computational efficiency.
+        if leftCof > 0:
+            local_weights = self.model.state_dict()
+            for key in self.model.state_dict().keys():
+                client_weight = leftCof * local_weights[key]
+                averaged_weights[key] += client_weight
+
+        self.model.load_state_dict(averaged_weights)
+        message = f"[Round: {str(self._round).zfill(4)}] ...updated weights of All clients are successfully averaged!"
+        printOnRunning(message);
+        del message;
+        gc.collect()
+
     def aggregateAfterAccumulation(self, sampled_client_indices, coefficients):
-        """Average the updated and transmitted parameters from each selected client."""
         message = f"[Round: {str(self._round).zfill(4)}] Aggregate updated weights of {len(sampled_client_indices)} clients...!"
         printOnRunning(message);
         del message;
         gc.collect()
-        # 如果对coefficients归一化，则保持其与FedAvg一样
-        coefficients = coefficients / np.sum(coefficients)
-
         averaged_weights = OrderedDict()
-
         for it, idx in enumerate(sampled_client_indices):
             local_weights = self.clients[idx].lastLocalModelChange
             for key in self.model.state_dict().keys():
@@ -262,11 +289,10 @@ class Server(object):
                     averaged_weights[key] += client_weight
         modelDict = self.model.state_dict()
         for key in self.model.state_dict().keys():
-            if not modelDict[key].dtype==averaged_weights[key].dtype:
+            if not modelDict[key].dtype == averaged_weights[key].dtype:
                 printOnRunning(f'{key} 类型不匹配，执行强制转换')
-                averaged_weights[key]=averaged_weights[key].type_as(modelDict[key])
+                averaged_weights[key] = averaged_weights[key].type_as(modelDict[key])
             modelDict[key] += averaged_weights[key]
-        # self.model.load_state_dict(averaged_weights)
         message = f"[Round: {str(self._round).zfill(4)}] ...updated weights of {len(sampled_client_indices)} clients are successfully averaged!"
         printOnRunning(message);
         del message;
@@ -290,9 +316,13 @@ class Server(object):
 
         mixing_coefficients = [self.clients[idx].getDatasetSize() / self.total_data_size for idx in
                                sampled_client_indices]
-        
+
         # average each updated model parameters of the selected clients and update the global model
-        self.aggregateAfterAccumulation(sampled_client_indices, mixing_coefficients)
+        # DPFedAvg uses "traditional Federated Aggregation"; FL-DPCR algorithms use "Aggregation after Accumulation"
+        if self.dpcr_model['name'] == 'DPFedAvg':
+            self.federatedAggregation(sampled_client_indices, mixing_coefficients)
+        else:
+            self.aggregateAfterAccumulation(sampled_client_indices, mixing_coefficients)
 
         return True;
 
@@ -327,7 +357,7 @@ class Server(object):
                 break;
             test_loss, test_accuracy = self.evaluate_global_model()
 
-            epsUseds=[];
+            epsUseds = [];
             for i in range(len(self.clients)):
                 epsUseds.append(self.clients[i].epsUsed)
             info = {'name': f"[{self.dataset_name}]_{self.modelName}", 'round': self._round,

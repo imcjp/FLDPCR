@@ -1,4 +1,4 @@
-# Code for "A Federated Learning Framework Based on Differential Privacy Continuous Data Release"
+# Code for "A Federated Learning Framework Based on Differentially Private Continuous Data Release"
 
 The project is the code for the paper **"A Federated Learning Framework Based on Differentially Private Continuous Data Release"**. The authors are Jianping Cai, Ximeng Liu*, Qingqing Ye, Yang Liu, Yuyang Wang.
 

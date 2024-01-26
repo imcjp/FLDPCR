@@ -100,13 +100,13 @@ if __name__ == '__main__':
             # If 'isFixedClientT' is True, the iteration number of participants is indicated by using 'ClientT' and sigma is calculated by the private budget and 'ClientT'.
             # Otherwise, use 'sigma' to indicate the amount of noise added by the participant, and 'ClientT' is calculated based on the privacy budget and 'sigma'
             'isFixedClientT': True,
-            'clientT': 4096,    #Only works for isFixedClientT = True
+            'clientT': 16383,    #Only works for isFixedClientT = True
             'sigma': 1    #Only works for isFixedClientT = False
         },
         'dpcr_model': {
             'name': 'SimpleMech',  #Available DPCR models: DPFedAvg (without DPCR), SimpleMech, TwoLevel, BinMech, FDA, BCRG, ABCRG
             'args':{
-                'kOrder': 12    #Only works for TwoLevel, BinMech, FDA, BCRG and ABCRG; Ignored for DPFedAvg and SimpleMech
+                'kOrder': 14    #Only works for TwoLevel, BinMech, FDA, BCRG and ABCRG; Ignored for DPFedAvg and SimpleMech
             }
         }
     }

@@ -1,0 +1,7 @@
+--extra-index-url https://download.pytorch.org/whl/cu118
+torch==2.1.2+cu118
+torchvision==0.16.2+cu118
+torchaudio==2.1.2+cu118
+opacus-dpcr==0.1.2
+tensorboard==2.10.1
+py7zr

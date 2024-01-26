@@ -26,23 +26,23 @@ The software environment of the source code requires **Python3**, and parts of t
 4. We conduct our experiments on three datasets: **MNIST**, **FashionMNIST**(**FMNIST**) and **CIFAR10**. Additionally, we integrated two deep learning models **CNN** and **WideResNet**. You can use them with the following three commands:
 + For **MNIST**:
 ```bash
-python main.py "{'data_config':{'dataset_name':'MNIST'}, 'model_config':{'name':'CNN_MNIST'}, 'dp_config':{'epsilon':1, 'delta':0.000333}}, 'dpcr_model':{'name':'ABCRG'}}"
+python main.py "{'data_config':{'dataset_name':'MNIST'}, 'model_config':{'name':'CNN_MNIST'}, 'dp_config':{'epsilon':1, 'delta':0.000333}, 'dpcr_model':{'name':'ABCRG'}}"
 ```
 + For **FashionMNIST**:
 ```bash
-python main.py "{'data_config':{'dataset_name':'FashionMNIST'}, 'model_config':{'name':'CNN_MNIST'}, 'dp_config':{'epsilon':2, 'delta':0.000333}}, 'dpcr_model':{'name':'ABCRG'}}"
+python main.py "{'data_config':{'dataset_name':'FashionMNIST'}, 'model_config':{'name':'CNN_MNIST'}, 'dp_config':{'epsilon':2, 'delta':0.000333}, 'dpcr_model':{'name':'ABCRG'}}"
 ```
 + For **CIFAR10**:
 ```bash
-python main.py "{'data_config':{'dataset_name':'CIFAR10'}, 'model_config':{'name':'WideResnet10_2'}, 'dp_config':{'epsilon':8, 'delta':0.0004}}, 'dpcr_model':{'name':'ABCRG'}}"
+python main.py "{'data_config':{'dataset_name':'CIFAR10'}, 'model_config':{'name':'WideResnet10_2'}, 'dp_config':{'epsilon':8, 'delta':0.0004}, 'dpcr_model':{'name':'ABCRG'}}"
 ```
 + For **HAR**:
 ```bash
-python main.py "{'data_config':{'dataset_name':'HAR'}, 'model_config':{'name':'CNN_HAR'}, 'dp_config':{'epsilon':4, 'delta':0.000625}, 'fed_config':{'K':5}}, 'dpcr_model':{'name':'ABCRG'}}"
+python main.py "{'data_config':{'dataset_name':'HAR'}, 'model_config':{'name':'CNN_HAR'}, 'dp_config':{'epsilon':4, 'delta':0.000625}, 'fed_config':{'K':5}, 'dpcr_model':{'name':'ABCRG'}}"
 ```
 + For **PAMAP**:
 ```bash
-python main.py "{'data_config':{'dataset_name':'PAMAP'}, 'model_config':{'name':'CNN_PAMAP'}, 'dp_config':{'epsilon':4, 'delta':0.000357}, 'fed_config':{'K':5}}, 'dpcr_model':{'name':'ABCRG'}}"
+python main.py "{'data_config':{'dataset_name':'PAMAP'}, 'model_config':{'name':'CNN_PAMAP'}, 'dp_config':{'epsilon':4, 'delta':0.000357}, 'fed_config':{'K':5}, 'dpcr_model':{'name':'ABCRG'}}"
 ```
 
 If you have any questions or suggestions for improvement, please contact email jpingcai@163.com. Thank you!

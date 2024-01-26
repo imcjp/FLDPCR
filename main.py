@@ -65,12 +65,12 @@ if __name__ == '__main__':
         },
         'data_config': { # dataset infomation.
             'data_path': 'data',
-            'dataset_name': 'MNIST', # MNIST, FashionMNIST or CIFAR10
+            'dataset_name': 'MNIST', # MNIST, FashionMNIST, CIFAR10, HAR(iot dataset) or PAMAP(iot dataset)
             'num_shards': 200,
         },
         'fed_config': {
             'C': 1, #Percentage of participants participating in training per communication round
-            'K': 20,    #Number of participants
+            'K': 20,    #Number of participants, recommend to set it to 5 for HAR and PAMAP as they have less samples.
             'R': 20000, #Maximum communication rounds. It may be less than actual communication rounds due to exhaustion of privacy budget.
             'E': 100,   #Internal iteration number
             'sample_rate': 0.01, #Sampling rate of each iteration
@@ -84,7 +84,11 @@ if __name__ == '__main__':
             'gpu_ids': [0]
         },
         'model_config': {
-            'name': 'CNN_MNIST',  #The available models see the file models/__init__.py, e.g. CNN_MNIST, WideResnet10_2
+            # For MNIST and FashionMNIST, the recommended model is 'CNN_MNIST'.
+            # For CIFAR10, you can use 'WideResnet10_2'.
+            # The HAR dataset can be effectively worked with using 'CNN_HAR'.
+            # For PAMAP, the suggested model is 'CNN_PAMAP'.
+            'name': 'CNN_MNIST',
             'args': {   #Arguments needed to construct the parameter model (optional)
             }
         },

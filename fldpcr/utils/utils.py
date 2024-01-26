@@ -19,6 +19,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.init as init
+from fldpcr.utils.iotData import PamapDataset, HarDataset
 
 from torch.utils.data import Dataset
 import torchvision
@@ -92,10 +93,29 @@ class CustomTensorDataset(Dataset):
     def __len__(self):
         return self.tensors[0].size(0)
 
+
+def balanced_split(tensor, k):
+    # Calculate the base size for each shard
+    base_size = len(tensor) // k
+    # Calculate the number of remaining elements that can't be evenly distributed
+    remainder = tensor.size(0) % k
+
+    # Distribute the remaining elements so that the size difference of each sub-dataset is at most 1
+    sizes = [base_size + 1 if i < remainder else base_size for i in range(k)]
+
+    # Split the tensor using cumulative indexing
+    shards = []
+    index = 0
+    for size in sizes:
+        shards.append(tensor[index:index + size])
+        index += size
+
+    return shards
+
 def create_datasets(data_path, dataset_name, num_clients, num_shards, iid,datasetDist=None):
     """Split the whole dataset in IID or non-IID manner for distributing to clients."""
     # get dataset from torchvision.datasets if exists
-    if hasattr(torchvision.datasets, dataset_name):
+    if hasattr(torchvision.datasets, dataset_name) or dataset_name in ["PAMAP","HAR"]:
         # set transformation differently per dataset
         if dataset_name in ["CIFAR10"]:
             CIFAR10_MEAN = (0.4914, 0.4822, 0.4465)
@@ -108,20 +128,46 @@ def create_datasets(data_path, dataset_name, num_clients, num_shards, iid,datase
             )
         elif dataset_name in ["MNIST","FashionMNIST"]:
             transform = torchvision.transforms.ToTensor()
-        
-        # prepare raw training & test datasets
-        training_dataset = torchvision.datasets.__dict__[dataset_name](
-            root=data_path,
-            train=True,
-            download=True,
-            transform=transform
-        )
-        test_dataset = torchvision.datasets.__dict__[dataset_name](
-            root=data_path,
-            train=False,
-            download=True,
-            transform=transform
-        )
+        else:
+            transform=None
+
+        if dataset_name == "PAMAP":
+            # prepare raw training & test datasets
+            training_dataset = PamapDataset(
+                root=data_path,
+                train=True,
+                transform=transform
+            )
+            test_dataset = PamapDataset(
+                root=data_path,
+                train=False,
+                transform=transform
+            )
+        elif dataset_name == "HAR":
+            training_dataset = HarDataset(
+                root=data_path,
+                train=True,
+                transform=transform
+            )
+            test_dataset = HarDataset(
+                root=data_path,
+                train=False,
+                transform=transform
+            )
+        else:
+            # prepare raw training & test datasets
+            training_dataset = torchvision.datasets.__dict__[dataset_name](
+                root=data_path,
+                train=True,
+                download=True,
+                transform=transform
+            )
+            test_dataset = torchvision.datasets.__dict__[dataset_name](
+                root=data_path,
+                train=False,
+                download=True,
+                transform=transform
+            )
     else:
         # dataset not found exception
         error_message = f"...dataset \"{dataset_name}\" is not supported or cannot be found in TorchVision Datasets!"
@@ -158,13 +204,22 @@ def create_datasets(data_path, dataset_name, num_clients, num_shards, iid,datase
             )
         # partition data into num_clients
         else:
-            split_size = len(training_dataset) // num_clients
-            split_datasets = list(
-                zip(
-                    torch.split(torch.Tensor(training_inputs), split_size),
-                    torch.split(torch.Tensor(training_labels), split_size)
+            if len(training_dataset) % num_clients==0:
+                split_size = len(training_dataset) // num_clients
+                split_datasets = list(
+                    zip(
+                        torch.split(torch.Tensor(training_inputs), split_size),
+                        torch.split(torch.Tensor(training_labels), split_size)
+                    )
                 )
-            )
+            else:
+                # split_size = (len(training_dataset) // num_clients)+1
+                split_datasets = list(
+                    zip(
+                        balanced_split(torch.Tensor(training_inputs), num_clients),
+                        balanced_split(torch.Tensor(training_labels), num_clients)
+                    )
+                )
 
         # finalize bunches of local datasets
         local_datasets = [

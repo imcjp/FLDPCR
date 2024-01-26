@@ -99,10 +99,7 @@ class PriClient(object):
                     losses.append(loss.item())
                 else:
                     losses.append(0.0)
-                if isinstance(self._pri_optimizer, DPCROptimizer):
-                    self._pri_optimizer.step(incMode=True)
-                else:
-                    self._pri_optimizer.step()
+                self._pri_optimizer.step()
                 self.accEpoch += 1
                 _batch_idx+=1;
                 if self.device == "cuda": torch.cuda.empty_cache()

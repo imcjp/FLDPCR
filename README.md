@@ -15,6 +15,8 @@ The software environment of the source code requires **Python3**, and parts of t
 * tensorboard==2.10.1
 * py7zr
 
+**Note: This project is designed based on Opacus version 1.1.2. Due to significant interface differences between versions of opacus, if you have installed a different version of Opacus, please reinstall Opacus version 1.1.2. Thank you!**
+
 
 #### Instructions:
 

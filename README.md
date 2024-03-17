@@ -1,6 +1,6 @@
 # Code for "A Federated Learning Framework Based on Differentially Private Continuous Data Release"
 
-The project is the code for the paper **"A Federated Learning Framework Based on Differentially Private Continuous Data Release"**. The authors are Jianping Cai, Ximeng Liu*, Qingqing Ye, Yang Liu, Yuyang Wang.
+The project is the code for the paper **"[A Federated Learning Framework Based on Differentially Private Continuous Data Release](https://ieeexplore.ieee.org/document/10426793)"**. The authors are Jianping Cai, Ximeng Liu*, Qingqing Ye, Yang Liu, Yuyang Wang.
 
 In this project, we design a Federated learning (FL) framework FL-DPCR. The framework introduces differential privacy continuous data release (DPCR) to construct parameter models, which significantly reduces the accumulation of noise on parameter models, thus improves the learning accuracy. By Equivalent Aggregation Theorem, we demonstrate that with proper algorithm design, traditional federated average aggregation can be transformed equivalently into the form of each participant individually constructing their local models before aggregation. Meanwhile, it addresses the effectiveness problem of DPCR applied to FL-DPCR and shows that the release error of DPCR is strongly associated with the error of the global model in the learning process of FL-DPCR. We verified the theorem in [**"Validation Report for Equivalent Aggregation Theorem"**](https://github.com/imcjp/FLDPCR/blob/main/Validation%20Report%20for%20Equivalent%20Aggregation%20Theorem.pdf).
 
@@ -15,7 +15,7 @@ The software environment of the source code requires **Python3**, and parts of t
 * tensorboard==2.10.1
 * py7zr
 
-**Note: This project is designed based on Opacus version 1.1.2. Due to significant interface differences between versions of opacus, if you have installed a different version of Opacus, please reinstall Opacus version 1.1.2. Thank you!**
+**Note: This project is designed based on Opacus version 1.1.12. Due to significant interface differences between versions of opacus, if you have installed a different version of Opacus, please reinstall Opacus version 1.1.2. Thank you!**
 
 
 #### Instructions:
